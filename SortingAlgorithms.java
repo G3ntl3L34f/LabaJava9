@@ -1,110 +1,51 @@
-import java.util.Arrays;
-
-
 public class SortingAlgorithms {
 
-    // Bubble
-    // O(n²)
-    public static void bubbleSort(int[] arr) {
-        if (arr == null || arr.length <= 1) return;
-        int n = arr.length;
-        boolean swapped;
+    public static void bubbleSort(int[] a) {
+        int n = a.length;
         for (int i = 0; i < n - 1; i++) {
-            swapped = false;
             for (int j = 0; j < n - 1 - i; j++) {
-                if (arr[j] > arr[j + 1]) {
-                    swap(arr, j, j + 1);
-                    swapped = true;
+                if (a[j] > a[j + 1]) {
+                    int t = a[j]; a[j] = a[j + 1]; a[j + 1] = t;
                 }
             }
-            if (!swapped) break;
         }
     }
 
-    // Selection
-    // O(n²)
-    public static void selectionSort(int[] arr) {
-        if (arr == null || arr.length <= 1) return;
-        int n = arr.length;
+    public static void selectionSort(int[] a) {
+        int n = a.length;
         for (int i = 0; i < n - 1; i++) {
-            int minIdx = i;
-            for (int j = i + 1; j < n; j++) {
-                if (arr[j] < arr[minIdx]) {
-                    minIdx = j;
-                }
-            }
-            if (minIdx != i) {
-                swap(arr, i, minIdx);
-            }
+            int min = i;
+            for (int j = i + 1; j < n; j++)
+                if (a[j] < a[min]) min = j;
+            int t = a[i]; a[i] = a[min]; a[min] = t;
         }
     }
 
-    //Insertion
-    // O(n²)
-    public static void insertionSort(int[] arr) {
-        if (arr == null || arr.length <= 1) return;
-        int n = arr.length;
-        for (int i = 1; i < n; i++) {
-            int key = arr[i];
-            int j = i - 1;
-            while (j >= 0 && arr[j] > key) {
-                arr[j + 1] = arr[j];
+    public static void insertionSort(int[] a) {
+        for (int i = 1; i < a.length; i++) {
+            int key = a[i], j = i - 1;
+            while (j >= 0 && a[j] > key) {
+                a[j + 1] = a[j];
                 j--;
             }
-            arr[j + 1] = key;
+            a[j + 1] = key;
         }
     }
 
-    // Quick 
-    // O(n log n)
-    public static void quickSort(int[] arr) {
-        if (arr == null || arr.length <= 1) return;
-        quickSort(arr, 0, arr.length - 1);
+    public static void quickSort(int[] a) {
+        quick(a, 0, a.length - 1);
     }
 
-    private static void quickSort(int[] arr, int low, int high) {
-        if (low < high) {
-            int pi = partition(arr, low, high);
-            quickSort(arr, low, pi - 1);
-            quickSort(arr, pi + 1, high);
-        }
-    }
-
-    // Разделение
-    private static int partition(int[] arr, int low, int high) {
-        int pivot = arr[high];
-        int i = low - 1;
-        for (int j = low; j < high; j++) {
-            if (arr[j] <= pivot) {
+    private static void quick(int[] a, int lo, int hi) {
+        if (lo >= hi) return;
+        int p = a[hi], i = lo - 1;
+        for (int j = lo; j < hi; j++)
+            if (a[j] <= p) {
                 i++;
-                swap(arr, i, j);
+                int t = a[i]; a[i] = a[j]; a[j] = t;
             }
-        }
-        swap(arr, i + 1, high);
-        return i + 1;
-    }
-
-    //  Вспомогательные
-
-    private static void swap(int[] arr, int i, int j) {
-        int temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
-    }
-
-    public static boolean isSorted(int[] arr) {
-        if (arr == null || arr.length <= 1) return true;
-        for (int i = 1; i < arr.length; i++) {
-            if (arr[i] < arr[i - 1]) return false;
-        }
-        return true;
-    }
-
-    public static boolean isCorrect(int[] original, int[] sorted) {
-        if (original == null || sorted == null) return original == sorted;
-        if (original.length != sorted.length) return false;
-        int[] expected = original.clone();
-        Arrays.sort(expected);
-        return Arrays.equals(expected, sorted);
+        int t = a[i + 1]; a[i + 1] = a[hi]; a[hi] = t;
+        quick(a, lo, i);
+        quick(a, i + 2, hi);
     }
 }
